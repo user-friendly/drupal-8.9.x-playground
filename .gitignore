@@ -1,0 +1,84 @@
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Eclipse #
+###########
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
+.cproject
+.buildpath
+.cproject
+.ant-targets-*
+.ptp-sync
+.ptp-sync-folder
+.eclipse-deploy*
+.eclipse-rsync*
+
+# Visual Studio #
+#################
+# These seem to be important.
+#*.vcxproj
+#*.vcproj
+*.vcxproj.*
+*.vcproj.*
+
+# Emacs #
+#########
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+.\#*
+.org-id-locations
+*_archive
+
+# GNU Globals #
+###############
+GPATH
+GRTAGS
+GTAGS
+
+# Misc #
+########
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.vi
+*.sass-cache
+_MATS
+.hg
+.svn
+.CVS
+.idea
+_notes
+dwsync.xml
+_compareTemp
