@@ -17,10 +17,12 @@ find / -uid $OLD_UID -not -path '/proc/*' -exec chown -v -h $NEW_UID '{}' \; -ex
 find / -gid $OLD_GID -not -path '/proc/*' -exec chgrp -v $NEW_GID '{}' \; -exec echo '{}' \;
 
 echo "Start the Apache2 service."
-#service apache2 start
+service apache2 start
 
 echo "Start the PHP-FPM service."
-echo "TODO: start php-fpm"
+# Grab the highest php-fpm version. TODO This is ugly. Is there a better way?
+PHP_FPM_SERVICE=`/bin/ls /etc/init.d/php*fpm | sort -r | awk -F '/' 'NR==1 { print $4 }'`
+service $PHP_FPM_SERVICE start
 
 trap "echo Stopping web service container.; sleep 1; exit" EXIT TERM KILL SIGKILL SIGTERM SIGQUIT SIGINT
 while :
