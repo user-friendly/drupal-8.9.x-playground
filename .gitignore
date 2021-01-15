@@ -1,3 +1,11 @@
+# Drupal application specific
+app/.*
+app/vendor
+app/web
+app/composer.lock
+
+### Generic excludes follow ###
+
 # OS generated files #
 ######################
 .DS_Store
