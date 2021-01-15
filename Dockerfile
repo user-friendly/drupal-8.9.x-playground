@@ -1,4 +1,7 @@
-# From example Drupal docker: https://github.com/ricardoamaro/drupal8-docker-app/blob/master/Dockerfile
+# Based on the Drupal docker example at https://github.com/ricardoamaro/drupal8-docker-app/blob/master/Dockerfile
+
+# TODO Do not reference a specific PHP version or
+#      at least centralize it.
 
 FROM ubuntu:20.04
 
@@ -16,6 +19,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ENV DEBIAN_FRONTEND newt
 ENV LANG en_US.utf8
+
+# Apache, PHP-FPM & Xdebug.
+# In case mod-php was installed remove it. We'll be using FPM.
+RUN apt-get remove -y libapache2-mod-php7.4
+RUN rm /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-enabled/*
+ADD ./docker-files/000-default.conf /etc/apache2/sites-available/000-default.conf
+ADD ./docker-files/xdebug.ini /etc/php/7.4/mods-available/xdebug.ini
+RUN a2ensite 000-default ; a2enmod proxy_fcgi rewrite vhost_alias
 
 # TODO Use supervisord to manage processes?
 
