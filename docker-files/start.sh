@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Setup www-data user.
-# At this time, the /var/www/html bind should be mounted
+# At this time, the /var/www bind should be mounted
 # and the host user/group ids should be available.
 OLD_UID=`id --user www-data`
 OLD_GID=`id --group www-data`
-#NEW_UID=`stat --format '%u' /var/www/html`
-#NEW_GID=`stat --format '%g' /var/www/html`
-NEW_UID=`/bin/ls -nd /var/www/html | awk '{ print $3 }'`
-NEW_GID=`/bin/ls -nd /var/www/html | awk '{ print $4 }'`
+#NEW_UID=`stat --format '%u' /var/www`
+#NEW_GID=`stat --format '%g' /var/www`
+NEW_UID=`/bin/ls -nd /var/www | awk '{ print $3 }'`
+NEW_GID=`/bin/ls -nd /var/www | awk '{ print $4 }'`
 
 usermod -u $NEW_UID www-data
 groupmod -g $NEW_GID www-data
