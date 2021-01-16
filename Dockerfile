@@ -27,9 +27,20 @@ ADD ./docker-files/000-default.conf /etc/apache2/sites-available/000-default.con
 ADD ./docker-files/xdebug.ini /etc/php/7.4/mods-available/xdebug.ini
 RUN a2ensite 000-default ; a2enmod proxy_fcgi rewrite vhost_alias
 
+# Setup application user.
+COPY ./docker-files/.bash_aliases /etc/skel
 ARG HOST_DEV_USER=developer
 ARG HOST_DEV_UID=1000
-RUN useradd -mUu $HOST_DEV_UID $HOST_DEV_USER
+ARG HOST_DEV_HOME=/home/$HOST_DEV_USER
+RUN useradd -mUu $HOST_DEV_UID $HOST_DEV_USER \
+    && echo "hello" \
+    && mkdir $HOST_DEV_HOME/bin && chown $HOST_DEV_USER:$HOST_DEV_USER $HOST_DEV_HOME/bin \
+    && echo "\n"'COMPOSER_HOME=$HOME/composer' >> $HOST_DEV_HOME/.bashrc \
+    && echo "\n"'PATH="$HOME/bin:$COMPOSER_HOME/vendor/bin:$PATH"' >> $HOST_DEV_HOME/.bashrc \
+    && echo "APP_USER=$HOST_DEV_USER\nAPP_UID=$HOST_DEV_UID" > /home/appuser \
+    && sed -i "s/www-data/$HOST_DEV_USER/" /etc/apache2/envvars /etc/php/7.4/fpm/pool.d/www.conf \
+    && find / -user www-data -not -path '/proc/*' -exec chown -v -h $HOST_DEV_USER '{}' \; \
+    && find / -group www-data -not -path '/proc/*' -exec chgrp -v $HOST_DEV_USER '{}' \;
 
 ENV DEBIAN_FRONTEND newt
 
@@ -40,19 +51,21 @@ ENV DEBIAN_FRONTEND newt
 #  locale-gen en_US.UTF-8; \
 #  mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor
 
-# TODO Install PHP related tools for www-data only.
 # Install Composer, drush and drupal console
-##ENV COMPOSER_HOME="/home/www-data/.composer"
-##RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-##  && /usr/local/bin/composer global require drush/drush:~8 \
-##  && ln -s $COMPOSER_HOME/vendor/drush/drush/drush /usr/local/bin/drush \
-##  && curl https://drupalconsole.com/installer -L -o /usr/local/bin/drupal \
-##  && chmod +x /usr/local/bin/drupal
-# Make sure the composer's "global" dir is owned by www-data.
-##RUN chown -R www-data:www-data $COMPOSER_HOME
-##RUN php --version; composer --version; drupal --version; drush --version
+USER $HOST_DEV_USER
+RUN export COMPOSER_HOME=$HOME/composer \
+  && curl -sS https://getcomposer.org/installer | php -- --install-dir=$HOME/bin --filename=composer \
+  && $HOME/bin/composer global require drush/drush:~8 \
+  && curl https://drupalconsole.com/installer -L -o $HOME/bin/drupal \
+  && chmod +x $HOME/bin/drupal
+USER $HOST_DEV_USER
+RUN PATH="$HOME/bin:$HOME/composer/vendor/bin:$PATH"; \
+    echo $PATH; php --version; composer --version; drupal --version; drush --version
+USER root
 
+# Root account convenience aliases.
 COPY ./docker-files/.bash_aliases /root/
+
 COPY ./docker-files/start.sh /
 
 EXPOSE 80 443 9000
