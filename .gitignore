@@ -1,3 +1,6 @@
+# Docker
+.env
+
 # Drupal application specific
 app/.*
 app/vendor

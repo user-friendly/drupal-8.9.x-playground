@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean; apt-get autoclean; apt-get -y autoremove; \
     rm -rf /var/lib/apt/lists/*
 
-ENV DEBIAN_FRONTEND newt
 ENV LANG en_US.utf8
 
 # Apache, PHP-FPM & Xdebug.
@@ -28,6 +27,12 @@ ADD ./docker-files/000-default.conf /etc/apache2/sites-available/000-default.con
 ADD ./docker-files/xdebug.ini /etc/php/7.4/mods-available/xdebug.ini
 RUN a2ensite 000-default ; a2enmod proxy_fcgi rewrite vhost_alias
 
+ARG HOST_DEV_USER=developer
+ARG HOST_DEV_UID=1000
+RUN useradd -mUu $HOST_DEV_UID $HOST_DEV_USER
+
+ENV DEBIAN_FRONTEND newt
+
 # TODO Use supervisord to manage processes?
 
 # RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd; \
@@ -35,16 +40,17 @@ RUN a2ensite 000-default ; a2enmod proxy_fcgi rewrite vhost_alias
 #  locale-gen en_US.UTF-8; \
 #  mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor
 
-# TODO Install PHP related tools for www-data only!
+# TODO Install PHP related tools for www-data only.
 # Install Composer, drush and drupal console
-ENV COMPOSER_HOME="/root/.composer"
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-  && /usr/local/bin/composer global require drush/drush:~8 \
-  && ln -s $COMPOSER_HOME/vendor/drush/drush/drush /usr/local/bin/drush \
-  && curl https://drupalconsole.com/installer -L -o /usr/local/bin/drupal \
-  && chmod +x /usr/local/bin/drupal
-
-RUN php --version; composer --version; drupal --version; drush --version
+##ENV COMPOSER_HOME="/home/www-data/.composer"
+##RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+##  && /usr/local/bin/composer global require drush/drush:~8 \
+##  && ln -s $COMPOSER_HOME/vendor/drush/drush/drush /usr/local/bin/drush \
+##  && curl https://drupalconsole.com/installer -L -o /usr/local/bin/drupal \
+##  && chmod +x /usr/local/bin/drupal
+# Make sure the composer's "global" dir is owned by www-data.
+##RUN chown -R www-data:www-data $COMPOSER_HOME
+##RUN php --version; composer --version; drupal --version; drush --version
 
 COPY ./docker-files/.bash_aliases /root/
 COPY ./docker-files/start.sh /

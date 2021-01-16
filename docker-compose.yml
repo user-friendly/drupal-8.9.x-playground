@@ -1,7 +1,11 @@
 version: '3'
 services:
     web:
-        build: .
+        build:
+            context: .
+            args:
+                HOST_DEV_USER: $HOST_DEV_USER
+                HOST_DEV_UID: $HOST_DEV_UID
         tty: true
         ports:
             - "80:80"
