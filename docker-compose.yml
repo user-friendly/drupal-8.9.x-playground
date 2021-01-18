@@ -12,3 +12,23 @@ services:
             - "443:443"
         volumes:
             - ./app:/var/www
+    db:
+        image: mariadb:10.5.8
+        ports:
+            - "3306:3306"
+        volumes:
+            - mariadb-lib:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: drupal
+    mcache:
+        image: memcached:1.6-alpine
+        ports:
+            - "11211:11211"
+        entrypoint:
+            - "/entrypoint.sh"
+            - "-m 128"
+# Add mail service.
+
+volumes:
+    mariadb-lib:

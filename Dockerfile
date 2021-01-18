@@ -7,8 +7,10 @@ FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# TODO The MariaDB client is required by drush. It adds some 60MB to the image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     locales git curl unzip wget ssl-cert ca-certificates \
+    mariadb-client \
     php-fpm apache2 \
     php php-cli php-common php-gd php-json php-mbstring php-xdebug \
     php-mysql php-opcache php-curl php-readline php-xml php-memcached php-oauth php-bcmath \
