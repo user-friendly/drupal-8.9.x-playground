@@ -18,7 +18,8 @@
         "drupal/core-composer-scaffold": "~8.9",
         "drupal/core-recommended": "~8.9",
         "drupal/console": "~1.9",
-        "drupal/memcache": "~2.2"
+        "drupal/memcache": "~2.2",
+        "drupal/config_split": "~1.7"
     },
     "conflict" : {
         "drupal/drupal" : "*"
