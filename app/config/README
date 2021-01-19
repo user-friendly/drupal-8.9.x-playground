@@ -1,0 +1,7 @@
+Place configurations per site here, inside a sync subfolder.
+Example:
+./default/sync/
+./foobar.com/sync/
+
+The sync folder is for the base configurations. Other site folders can be used
+with config split (e.g. ./default/development, ./foobar.com/production).

@@ -6,6 +6,7 @@ app/.*
 app/vendor
 app/web
 app/composer.lock
+app/config
 
 ### Generic excludes follow ###
 
