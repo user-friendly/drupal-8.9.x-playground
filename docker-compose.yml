@@ -12,6 +12,9 @@ services:
             - "443:443"
         volumes:
             - ./app:/var/www
+        depends_on:
+            - db
+            - memorycache
     db:
         image: mariadb:10.5.8
         ports:
@@ -21,7 +24,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: drupal
-    mcache:
+    memorycache:
         image: memcached:1.6-alpine
         ports:
             - "11211:11211"
