@@ -35,7 +35,6 @@ ARG HOST_DEV_USER=developer
 ARG HOST_DEV_UID=1000
 ARG HOST_DEV_HOME=/home/$HOST_DEV_USER
 RUN useradd -mUu $HOST_DEV_UID $HOST_DEV_USER \
-    && echo "hello" \
     && mkdir $HOST_DEV_HOME/bin && chown $HOST_DEV_USER:$HOST_DEV_USER $HOST_DEV_HOME/bin \
     && echo "\n"'COMPOSER_HOME=$HOME/composer' >> $HOST_DEV_HOME/.bashrc \
     && echo "\n"'PATH="$HOME/bin:$COMPOSER_HOME/vendor/bin:$PATH"' >> $HOST_DEV_HOME/.bashrc \

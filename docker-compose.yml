@@ -10,6 +10,8 @@ services:
         ports:
             - "80:80"
             - "443:443"
+        extra_hosts:
+            - "dockerhost:$HOST_IP"
         volumes:
             - ./app:/var/www
         depends_on:

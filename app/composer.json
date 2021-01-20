@@ -21,6 +21,9 @@
         "drupal/memcache": "~2.2",
         "drupal/config_split": "~1.7"
     },
+    "require-dev": {
+        "drupal/devel": "~4.1"
+    },
     "conflict" : {
         "drupal/drupal" : "*"
     },
