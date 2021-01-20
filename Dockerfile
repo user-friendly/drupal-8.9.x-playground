@@ -26,8 +26,10 @@ ENV LANG en_US.utf8
 RUN apt-get remove -y libapache2-mod-php7.4
 RUN rm -Rf /var/www/html /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-enabled/*
 ADD ./docker-files/000-default.conf /etc/apache2/sites-available/000-default.conf
-ADD ./docker-files/xdebug.ini /etc/php/7.4/mods-available/xdebug.ini
 RUN a2ensite 000-default ; a2enmod proxy_fcgi rewrite vhost_alias
+ADD ./docker-files/xdebug.ini /etc/php/7.4/mods-available/xdebug.ini
+ADD ./docker-files/app.ini /etc/php/7.4/mods-available/app.ini
+RUN phpenmod app
 
 # Setup application user.
 COPY ./docker-files/.bash_aliases /etc/skel
