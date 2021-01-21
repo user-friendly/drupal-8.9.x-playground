@@ -8,9 +8,14 @@
         "docs" : "https://www.drupal.org/docs/user_guide/en/index.html",
         "chat" : "https://www.drupal.org/node/314178"
     },
-    "repositories" : [{
+    "repositories" : [
+        {
             "type" : "composer",
             "url" : "https://packages.drupal.org/8"
+        },
+        {
+            "type" : "vcs",
+            "url" : "ssh://git@github.com/user-friendly/config_filter_uuid.git"
         }
     ],
     "require" : {
@@ -22,7 +27,8 @@
         "drupal/config_split": "~1.7"
     },
     "require-dev": {
-        "drupal/devel": "~4.1"
+        "drupal/devel": "~4.1",
+        "user-friendly/config_filter_uuid": "dev-master"
     },
     "conflict" : {
         "drupal/drupal" : "*"
