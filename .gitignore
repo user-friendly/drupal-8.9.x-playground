@@ -1,5 +1,6 @@
 # Docker
 .env
+docker-files/id_rsa*
 
 # Drupal application specific
 app/.*

@@ -9,10 +9,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # TODO The MariaDB client is required by drush. It adds some 60MB to the image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    locales git curl unzip wget ssl-cert ca-certificates \
-    mariadb-client \
-    php-fpm apache2 \
-    php php-cli php-common php-gd php-json php-mbstring php-xdebug \
+    locales git curl unzip wget openssh-client mariadb-client ssl-cert ca-certificates \
+    php-fpm apache2 php php-cli php-common php-gd php-json php-mbstring php-xdebug \
     php-mysql php-opcache php-curl php-readline php-xml php-memcached php-oauth php-bcmath \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 \
     && echo "Cleaning up..." \
@@ -33,11 +31,14 @@ RUN phpenmod app
 
 # Setup application user.
 COPY ./docker-files/.bash_aliases /etc/skel
+COPY ./docker-files/id_rsa* /tmp/ 
 ARG HOST_DEV_USER=developer
 ARG HOST_DEV_UID=1000
 ARG HOST_DEV_HOME=/home/$HOST_DEV_USER
 RUN useradd -mUu $HOST_DEV_UID $HOST_DEV_USER \
-    && mkdir $HOST_DEV_HOME/bin && chown $HOST_DEV_USER:$HOST_DEV_USER $HOST_DEV_HOME/bin \
+    && mkdir $HOST_DEV_HOME/bin $HOST_DEV_HOME/.ssh \
+    && mv /tmp/id_rsa* $HOST_DEV_HOME/.ssh && chmod 0700 $HOST_DEV_HOME/.ssh \
+    && chown -R $HOST_DEV_USER:$HOST_DEV_USER $HOST_DEV_HOME/bin $HOST_DEV_HOME/.ssh \
     && echo "\n"'COMPOSER_HOME=$HOME/composer' >> $HOST_DEV_HOME/.bashrc \
     && echo "\n"'PATH="$HOME/bin:$COMPOSER_HOME/vendor/bin:$PATH"' >> $HOST_DEV_HOME/.bashrc \
     && echo "APP_USER=$HOST_DEV_USER\nAPP_UID=$HOST_DEV_UID" > /home/appuser \
